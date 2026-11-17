@@ -2,6 +2,7 @@ import { Suspense, useEffect, useState } from 'react'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 
 import { EngineeringCopilot } from '@/components/copilot/engineering-copilot'
+import { PresenterDock } from '@/components/demo/presenter-dock'
 import { Sidebar } from '@/components/layout/sidebar'
 import { Topbar } from '@/components/layout/topbar'
 import { PageHeader } from '@/components/shared/page-header'
@@ -81,6 +82,7 @@ function AppShell() {
               experimental data are kept distinct.
             </p>
           </footer>
+          <PresenterDock />
         </div>
       </div>
       <EngineeringCopilot />

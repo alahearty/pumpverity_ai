@@ -44,6 +44,7 @@ import {
 import type { SseEvent } from '@/lib/api'
 import { useAuth } from '@/providers/auth-provider'
 import { useCopilotPageContext } from '@/providers/copilot-context-provider'
+import { fetchDemoControl } from '@/services/demo-service'
 import { fetchPumps } from '@/services/equipment-service'
 import { fetchLiveSnapshot } from '@/services/monitoring-service'
 import { formatDateTime, formatScenario } from '@/lib/utils'
@@ -121,10 +122,10 @@ function LiveMonitoringPage() {
         event.event === 'sensor_health' ||
         event.event === 'prediction'
       ) {
-        queryClient.invalidateQueries({ queryKey: ['monitoring-live'] })
-        queryClient.invalidateQueries({ queryKey: ['monitoring-overview'] })
-        queryClient.invalidateQueries({ queryKey: ['sensor-health'] })
-        queryClient.invalidateQueries({ queryKey: ['predictions'] })
+        queryClient.invalidateQueries({ queryKey: ['monitoring-live'] }, { cancelRefetch: false })
+        queryClient.invalidateQueries({ queryKey: ['monitoring-overview'] }, { cancelRefetch: false })
+        queryClient.invalidateQueries({ queryKey: ['sensor-health'] }, { cancelRefetch: false })
+        queryClient.invalidateQueries({ queryKey: ['predictions'] }, { cancelRefetch: false })
       }
     },
     [queryClient],
@@ -135,6 +136,14 @@ function LiveMonitoringPage() {
     sensorId: effectiveSensorId || undefined,
     onEvent: handleStreamEvent,
   })
+
+  const demoControl = useQuery({
+    queryKey: ['demo-control'],
+    queryFn: fetchDemoControl,
+    refetchInterval: 2_000,
+    retry: false,
+  })
+  const demoMode = Boolean(demoControl.data?.enabled)
 
   const snapshot = snapshotQuery.data
   const chartSnapshot = chartPaused ? frozenSnapshot : snapshot
@@ -801,13 +810,23 @@ function LiveMonitoringPage() {
                   label={snapshot?.data_mode === 'SIMULATED_REPLAY' ? 'Simulated replay' : 'No data'}
                 />
               </div>
-              <pre className="overflow-x-auto whitespace-pre-wrap rounded-lg bg-navy-950 p-3 font-mono text-[10px] leading-relaxed text-accent-100">
-                {simulationCommand}
-              </pre>
-              <p className="text-[10px] leading-relaxed text-slate-400">
-                Network outage and buffering controls are not available in this build. Sensor-disconnect and
-                corrupted-sample scenarios can be run with the edge CLI.
-              </p>
+              {demoMode ? (
+                <p className="text-[11px] leading-relaxed text-slate-500">
+                  Presentation mode: the edge demo driver generates one simulated window per second
+                  and runs the same validation, feature and inference pipeline as the edge device.
+                  Choose the scenario in the panel above.
+                </p>
+              ) : (
+                <>
+                  <pre className="overflow-x-auto whitespace-pre-wrap rounded-lg bg-navy-950 p-3 font-mono text-[10px] leading-relaxed text-accent-100">
+                    {simulationCommand}
+                  </pre>
+                  <p className="text-[10px] leading-relaxed text-slate-400">
+                    Network outage and buffering controls are not available in this build. Sensor-disconnect and
+                    corrupted-sample scenarios can be run with the edge CLI.
+                  </p>
+                </>
+              )}
             </CardContent>
           </Card>
         </div>

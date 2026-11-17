@@ -10,6 +10,8 @@ import {
   YAxis,
 } from 'recharts'
 
+import { parseApiDate } from '@/lib/utils'
+
 interface RmsTrendChartProps {
   windows: WindowPoint[]
   alerts?: Alert[]
@@ -30,7 +32,7 @@ const EVENT_META: Record<
 }
 
 function formatWindowTime(value: string): string {
-  const date = new Date(value)
+  const date = parseApiDate(value)
   if (Number.isNaN(date.getTime())) return 'Unknown'
   return new Intl.DateTimeFormat('en-GB', {
     hour: '2-digit',

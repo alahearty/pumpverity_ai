@@ -87,9 +87,9 @@ function LoginPage() {
                 <WifiOff className="size-4" aria-hidden="true" />
               </div>
               <div>
-                <p className="text-sm font-medium text-white">Offline-first by design</p>
+                <p className="text-sm font-medium text-white">Edge-first by design</p>
                 <p className="mt-0.5 text-xs leading-relaxed text-slate-400">
-                  Edge inference and buffering continue when the monitoring server is unavailable.
+                  Inference runs on the edge device itself; durable offline buffering is the next build stage.
                 </p>
               </div>
             </li>
