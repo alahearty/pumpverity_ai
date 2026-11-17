@@ -1,0 +1,22 @@
+{
+  "name": "petrosense-ai",
+  "version": "0.6.0",
+  "private": true,
+  "description": "PUMPVERITY AI — uncertainty-aware edge monitoring research prototype",
+  "workspaces": [
+    "apps/web",
+    "packages/shared-contracts"
+  ],
+  "scripts": {
+    "dev:web": "npm run dev --workspace @petrosense/web",
+    "build:web": "npm run build --workspace @petrosense/web",
+    "lint:web": "npm run lint --workspace @petrosense/web",
+    "test:web": "npm run test --workspace @petrosense/web",
+    "test:e2e": "npm run test:e2e --workspace @petrosense/web"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
+
+

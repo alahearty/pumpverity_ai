@@ -1,0 +1,352 @@
+{
+  "dataset_provenance": "SIMULATED",
+  "models": [
+    {
+      "metadata": {
+        "model_code": "petrosense-threshold",
+        "name": "PetroSense engineering threshold baseline",
+        "version": "0.1.0",
+        "algorithm": "engineering-threshold",
+        "runtime": "BASELINE",
+        "feature_contract": {
+          "version": "petrosense-time-v1",
+          "features": [
+            "rms"
+          ]
+        },
+        "training_dataset_version": "synthetic-grouped-v2",
+        "evaluation_dataset": "synthetic-grouped-holdout-v1",
+        "deployment_compatibility": {
+          "edge": "petrosense-edge",
+          "artifact_format": 1,
+          "feature_contract_version": "petrosense-time-v1",
+          "note": "Threshold baseline is a comparison model; the linear JSON model is the selected Stage 4 edge deployment candidate."
+        },
+        "artifact_path": "ml/artifacts/petrosense-threshold-0.1.0.json",
+        "artifact_sha256": "0405cd0bb598e85bc508f51159b4fe4aca7fdffdb89f6fa6b13107525875c7f9",
+        "notes": "Synthetic research artefact. Evaluation provenance is SIMULATED; no real-pump performance claim."
+      },
+      "evaluation": {
+        "dataset_name": "Synthetic grouped hold-out set",
+        "dataset_version": "synthetic-grouped-holdout-v1",
+        "data_provenance": "SIMULATED",
+        "evaluation_protocol": "Grouped hold-out by simulated run",
+        "split_description": "GroupShuffleSplit by run_id (scenario + seed); no window from a run appears in both train and test.",
+        "sample_count": 108,
+        "balanced_accuracy": 1.0,
+        "macro_f1": 1.0,
+        "metrics": {
+          "coverage": 1.0,
+          "risk": 0.0,
+          "false_alert_rate": 0.0,
+          "precision_fault": 1.0,
+          "recall_fault": 1.0,
+          "accepted_count": 108,
+          "abstained_count": 0
+        },
+        "confusion_matrix": {
+          "labels": [
+            "NORMAL",
+            "FAULT"
+          ],
+          "matrix": [
+            [
+              15,
+              0
+            ],
+            [
+              0,
+              93
+            ]
+          ],
+          "abstained": 0
+        },
+        "risk_coverage": [
+          {
+            "threshold": 0.5,
+            "coverage": 1.0,
+            "risk": 0.0
+          },
+          {
+            "threshold": 0.55,
+            "coverage": 1.0,
+            "risk": 0.0
+          },
+          {
+            "threshold": 0.6,
+            "coverage": 1.0,
+            "risk": 0.0
+          },
+          {
+            "threshold": 0.65,
+            "coverage": 1.0,
+            "risk": 0.0
+          },
+          {
+            "threshold": 0.7,
+            "coverage": 1.0,
+            "risk": 0.0
+          },
+          {
+            "threshold": 0.75,
+            "coverage": 1.0,
+            "risk": 0.0
+          },
+          {
+            "threshold": 0.8,
+            "coverage": 1.0,
+            "risk": 0.0
+          },
+          {
+            "threshold": 0.85,
+            "coverage": 1.0,
+            "risk": 0.0
+          },
+          {
+            "threshold": 0.9,
+            "coverage": 1.0,
+            "risk": 0.0
+          },
+          {
+            "threshold": 0.95,
+            "coverage": 1.0,
+            "risk": 0.0
+          }
+        ],
+        "calibration": {
+          "brier": 8.881228042144258e-07,
+          "ece": 9.068273980356858e-05,
+          "bins": [
+            {
+              "bin": 0,
+              "count": 15,
+              "mean_score": 0.0007,
+              "fraction_positive": 0.0
+            },
+            {
+              "bin": 1,
+              "count": 0
+            },
+            {
+              "bin": 2,
+              "count": 0
+            },
+            {
+              "bin": 3,
+              "count": 0
+            },
+            {
+              "bin": 4,
+              "count": 0
+            },
+            {
+              "bin": 5,
+              "count": 0
+            },
+            {
+              "bin": 6,
+              "count": 0
+            },
+            {
+              "bin": 7,
+              "count": 0
+            },
+            {
+              "bin": 8,
+              "count": 0
+            },
+            {
+              "bin": 9,
+              "count": 93,
+              "mean_score": 1.0,
+              "fraction_positive": 1.0
+            }
+          ]
+        },
+        "is_verified": true,
+        "evaluated_by": "petrosense-ml-stage4",
+        "notes": "Verified as a synthetic evaluation record, not as real-world experimental ground truth."
+      },
+      "activate": false
+    },
+    {
+      "metadata": {
+        "model_code": "petrosense-linear",
+        "name": "PetroSense lightweight linear",
+        "version": "0.1.0",
+        "algorithm": "logistic-regression",
+        "runtime": "LINEAR_JSON",
+        "feature_contract": {
+          "version": "petrosense-time-v1",
+          "features": [
+            "rms",
+            "peak_abs",
+            "std",
+            "skewness",
+            "kurtosis_excess",
+            "crest_factor",
+            "zero_crossing_rate",
+            "spectral_1x_ratio",
+            "spectral_2x_ratio",
+            "high_frequency_ratio"
+          ]
+        },
+        "training_dataset_version": "synthetic-grouped-v2",
+        "evaluation_dataset": "synthetic-grouped-holdout-v1",
+        "deployment_compatibility": {
+          "edge": "petrosense-edge",
+          "artifact_format": 1,
+          "feature_contract_version": "petrosense-time-v1",
+          "note": "Selected Stage 4 lightweight edge deployment candidate."
+        },
+        "artifact_path": "ml/artifacts/petrosense-linear-0.1.0.json",
+        "artifact_sha256": "bf3d0c82c394c39ec243c49cde1dcbeab0401478a6a5c7a021b8e0939086d325",
+        "notes": "Synthetic research artefact. Evaluation provenance is SIMULATED; no real-pump performance claim."
+      },
+      "evaluation": {
+        "dataset_name": "Synthetic grouped hold-out set",
+        "dataset_version": "synthetic-grouped-holdout-v1",
+        "data_provenance": "SIMULATED",
+        "evaluation_protocol": "Grouped hold-out by simulated run",
+        "split_description": "GroupShuffleSplit by run_id (scenario + seed); no window from a run appears in both train and test.",
+        "sample_count": 108,
+        "balanced_accuracy": 1.0,
+        "macro_f1": 1.0,
+        "metrics": {
+          "coverage": 1.0,
+          "risk": 0.0,
+          "false_alert_rate": 0.0,
+          "precision_fault": 1.0,
+          "recall_fault": 1.0,
+          "accepted_count": 108,
+          "abstained_count": 0
+        },
+        "confusion_matrix": {
+          "labels": [
+            "NORMAL",
+            "FAULT"
+          ],
+          "matrix": [
+            [
+              15,
+              0
+            ],
+            [
+              0,
+              93
+            ]
+          ],
+          "abstained": 0
+        },
+        "risk_coverage": [
+          {
+            "threshold": 0.5,
+            "coverage": 1.0,
+            "risk": 0.0
+          },
+          {
+            "threshold": 0.55,
+            "coverage": 1.0,
+            "risk": 0.0
+          },
+          {
+            "threshold": 0.6,
+            "coverage": 1.0,
+            "risk": 0.0
+          },
+          {
+            "threshold": 0.65,
+            "coverage": 1.0,
+            "risk": 0.0
+          },
+          {
+            "threshold": 0.7,
+            "coverage": 1.0,
+            "risk": 0.0
+          },
+          {
+            "threshold": 0.75,
+            "coverage": 1.0,
+            "risk": 0.0
+          },
+          {
+            "threshold": 0.8,
+            "coverage": 0.9722222222222222,
+            "risk": 0.0
+          },
+          {
+            "threshold": 0.85,
+            "coverage": 0.9722222222222222,
+            "risk": 0.0
+          },
+          {
+            "threshold": 0.9,
+            "coverage": 0.9722222222222222,
+            "risk": 0.0
+          },
+          {
+            "threshold": 0.95,
+            "coverage": 0.9722222222222222,
+            "risk": 0.0
+          }
+        ],
+        "calibration": {
+          "brier": 0.0014271001904225668,
+          "ece": 0.01056074655217012,
+          "bins": [
+            {
+              "bin": 0,
+              "count": 15,
+              "mean_score": 0.0099,
+              "fraction_positive": 0.0
+            },
+            {
+              "bin": 1,
+              "count": 0
+            },
+            {
+              "bin": 2,
+              "count": 0
+            },
+            {
+              "bin": 3,
+              "count": 0
+            },
+            {
+              "bin": 4,
+              "count": 0
+            },
+            {
+              "bin": 5,
+              "count": 0
+            },
+            {
+              "bin": 6,
+              "count": 0
+            },
+            {
+              "bin": 7,
+              "count": 3,
+              "mean_score": 0.7768,
+              "fraction_positive": 1.0
+            },
+            {
+              "bin": 8,
+              "count": 0
+            },
+            {
+              "bin": 9,
+              "count": 90,
+              "mean_score": 0.9964,
+              "fraction_positive": 1.0
+            }
+          ]
+        },
+        "is_verified": true,
+        "evaluated_by": "petrosense-ml-stage4",
+        "notes": "Verified as a synthetic evaluation record, not as real-world experimental ground truth."
+      },
+      "activate": true
+    }
+  ]
+}

@@ -1,0 +1,156 @@
+from enum import StrEnum
+
+
+class RoleName(StrEnum):
+    ADMINISTRATOR = "ADMINISTRATOR"
+    ENGINEER = "ENGINEER"
+    RESEARCHER = "RESEARCHER"
+    REVIEWER = "REVIEWER"
+
+
+class PumpType(StrEnum):
+    CENTRIFUGAL = "CENTRIFUGAL"
+    POSITIVE_DISPLACEMENT = "POSITIVE_DISPLACEMENT"
+    OTHER = "OTHER"
+
+
+class PumpStatus(StrEnum):
+    ACTIVE = "ACTIVE"
+    MAINTENANCE = "MAINTENANCE"
+    RETIRED = "RETIRED"
+
+
+class SensorType(StrEnum):
+    VIBRATION = "VIBRATION"
+    RPM = "RPM"
+    TEMPERATURE = "TEMPERATURE"
+
+
+class MountingAxis(StrEnum):
+    AXIAL = "AXIAL"
+    RADIAL_X = "RADIAL_X"
+    RADIAL_Y = "RADIAL_Y"
+    RADIAL_Z = "RADIAL_Z"
+    UNKNOWN = "UNKNOWN"
+
+
+class OperatingRegimeCode(StrEnum):
+    STEADY_STATE = "STEADY_STATE"
+    STARTUP = "STARTUP"
+    SHUTDOWN = "SHUTDOWN"
+    VARIABLE_LOAD = "VARIABLE_LOAD"
+    UNKNOWN = "UNKNOWN"
+
+
+class SessionStatus(StrEnum):
+    ACTIVE = "ACTIVE"
+    COMPLETED = "COMPLETED"
+    ABORTED = "ABORTED"
+
+
+class Provenance(StrEnum):
+    SIMULATED = "SIMULATED"
+    EXPERIMENTAL = "EXPERIMENTAL"
+
+
+class DataQuality(StrEnum):
+    VALID = "VALID"
+    SENSOR_INVALID = "SENSOR_INVALID"
+
+
+class EquipmentCondition(StrEnum):
+    NORMAL = "NORMAL"
+    FAULT = "FAULT"
+    UNCERTAIN = "UNCERTAIN"
+
+
+class PredictionDecision(StrEnum):
+    NORMAL = "NORMAL"
+    FAULT = "FAULT"
+    UNCERTAIN = "UNCERTAIN"
+    SENSOR_INVALID = "SENSOR_INVALID"
+
+
+class AlertCategory(StrEnum):
+    FAULT = "FAULT"
+    UNCERTAIN = "UNCERTAIN"
+    SENSOR_INVALID = "SENSOR_INVALID"
+
+
+class AlertSeverity(StrEnum):
+    LOW = "LOW"
+    MEDIUM = "MEDIUM"
+    HIGH = "HIGH"
+    CRITICAL = "CRITICAL"
+
+
+class AlertStatus(StrEnum):
+    OPEN = "OPEN"
+    ACKNOWLEDGED = "ACKNOWLEDGED"
+    REVIEWED = "REVIEWED"
+    CLOSED = "CLOSED"
+    DISMISSED = "DISMISSED"
+
+
+class ReviewAction(StrEnum):
+    ACKNOWLEDGE = "ACKNOWLEDGE"
+    REVIEW = "REVIEW"
+    CONFIRM_LABEL = "CONFIRM_LABEL"
+    CORRECT_LABEL = "CORRECT_LABEL"
+    ADD_NOTE = "ADD_NOTE"
+    CLOSE = "CLOSE"
+
+
+class LabelSource(StrEnum):
+    AI_PREDICTION = "AI_PREDICTION"
+    ENGINEER_REVIEW = "ENGINEER_REVIEW"
+    EXPERIMENTAL_RUN = "EXPERIMENTAL_RUN"
+    IMPORTED_DATASET = "IMPORTED_DATASET"
+
+
+class ModelRuntime(StrEnum):
+    ONNX = "ONNX"
+    SKLEARN = "SKLEARN"
+    TFLITE = "TFLITE"
+    BASELINE = "BASELINE"
+    LINEAR_JSON = "LINEAR_JSON"
+
+
+class ModelStatus(StrEnum):
+    REGISTERED = "REGISTERED"
+    VALIDATED = "VALIDATED"
+    ACTIVE = "ACTIVE"
+    RETIRED = "RETIRED"
+    REJECTED = "REJECTED"
+
+
+class ConnectivityStatus(StrEnum):
+    ONLINE = "ONLINE"
+    OFFLINE_BUFFERING = "OFFLINE_BUFFERING"
+    SYNCING = "SYNCING"
+    SYNCED = "SYNCED"
+    SYNC_ERROR = "SYNC_ERROR"
+
+
+class DeliveryStatus(StrEnum):
+    PENDING = "PENDING"
+    IN_FLIGHT = "IN_FLIGHT"
+    DELIVERED = "DELIVERED"
+    FAILED = "FAILED"
+    DEAD_LETTER = "DEAD_LETTER"
+
+
+class ReportType(StrEnum):
+    MONITORING_SUMMARY = "MONITORING_SUMMARY"
+    ALERT_HISTORY = "ALERT_HISTORY"
+    MODEL_EVALUATION = "MODEL_EVALUATION"
+    SENSOR_HEALTH = "SENSOR_HEALTH"
+    ENGINEERING_REVIEW = "ENGINEERING_REVIEW"
+    EXPERIMENTAL_DATA_EXPORT = "EXPERIMENTAL_DATA_EXPORT"
+
+
+class ReportStatus(StrEnum):
+    QUEUED = "QUEUED"
+    RUNNING = "RUNNING"
+    COMPLETED = "COMPLETED"
+    FAILED = "FAILED"

@@ -1,0 +1,503 @@
+{
+  "dataset_provenance": "SIMULATED",
+  "decision_thresholds": {
+    "fault": 0.65,
+    "normal": 0.35
+  },
+  "models": {
+    "threshold_baseline": {
+      "model": "threshold_baseline",
+      "sample_count": 108,
+      "coverage": 1.0,
+      "risk": 0.0,
+      "balanced_accuracy": 1.0,
+      "macro_f1": 1.0,
+      "precision_fault": 1.0,
+      "recall_fault": 1.0,
+      "false_alert_rate": 0.0,
+      "accepted_count": 108,
+      "abstained_count": 0,
+      "confusion_matrix": {
+        "labels": [
+          "NORMAL",
+          "FAULT"
+        ],
+        "matrix": [
+          [
+            15,
+            0
+          ],
+          [
+            0,
+            93
+          ]
+        ],
+        "abstained": 0
+      },
+      "risk_coverage": [
+        {
+          "threshold": 0.5,
+          "coverage": 1.0,
+          "risk": 0.0
+        },
+        {
+          "threshold": 0.55,
+          "coverage": 1.0,
+          "risk": 0.0
+        },
+        {
+          "threshold": 0.6,
+          "coverage": 1.0,
+          "risk": 0.0
+        },
+        {
+          "threshold": 0.65,
+          "coverage": 1.0,
+          "risk": 0.0
+        },
+        {
+          "threshold": 0.7,
+          "coverage": 1.0,
+          "risk": 0.0
+        },
+        {
+          "threshold": 0.75,
+          "coverage": 1.0,
+          "risk": 0.0
+        },
+        {
+          "threshold": 0.8,
+          "coverage": 1.0,
+          "risk": 0.0
+        },
+        {
+          "threshold": 0.85,
+          "coverage": 1.0,
+          "risk": 0.0
+        },
+        {
+          "threshold": 0.9,
+          "coverage": 1.0,
+          "risk": 0.0
+        },
+        {
+          "threshold": 0.95,
+          "coverage": 1.0,
+          "risk": 0.0
+        }
+      ],
+      "calibration": {
+        "brier": 8.881228042144258e-07,
+        "ece": 9.068273980356858e-05,
+        "bins": [
+          {
+            "bin": 0,
+            "count": 15,
+            "mean_score": 0.0007,
+            "fraction_positive": 0.0
+          },
+          {
+            "bin": 1,
+            "count": 0
+          },
+          {
+            "bin": 2,
+            "count": 0
+          },
+          {
+            "bin": 3,
+            "count": 0
+          },
+          {
+            "bin": 4,
+            "count": 0
+          },
+          {
+            "bin": 5,
+            "count": 0
+          },
+          {
+            "bin": 6,
+            "count": 0
+          },
+          {
+            "bin": 7,
+            "count": 0
+          },
+          {
+            "bin": 8,
+            "count": 0
+          },
+          {
+            "bin": 9,
+            "count": 93,
+            "mean_score": 1.0,
+            "fraction_positive": 1.0
+          }
+        ]
+      },
+      "incipient_stress": {
+        "count": 15,
+        "abstained": 0
+      }
+    },
+    "random_forest": {
+      "model": "random_forest",
+      "sample_count": 108,
+      "coverage": 1.0,
+      "risk": 0.0,
+      "balanced_accuracy": 1.0,
+      "macro_f1": 1.0,
+      "precision_fault": 1.0,
+      "recall_fault": 1.0,
+      "false_alert_rate": 0.0,
+      "accepted_count": 108,
+      "abstained_count": 0,
+      "confusion_matrix": {
+        "labels": [
+          "NORMAL",
+          "FAULT"
+        ],
+        "matrix": [
+          [
+            15,
+            0
+          ],
+          [
+            0,
+            93
+          ]
+        ],
+        "abstained": 0
+      },
+      "risk_coverage": [
+        {
+          "threshold": 0.5,
+          "coverage": 1.0,
+          "risk": 0.0
+        },
+        {
+          "threshold": 0.55,
+          "coverage": 1.0,
+          "risk": 0.0
+        },
+        {
+          "threshold": 0.6,
+          "coverage": 1.0,
+          "risk": 0.0
+        },
+        {
+          "threshold": 0.65,
+          "coverage": 1.0,
+          "risk": 0.0
+        },
+        {
+          "threshold": 0.7,
+          "coverage": 1.0,
+          "risk": 0.0
+        },
+        {
+          "threshold": 0.75,
+          "coverage": 1.0,
+          "risk": 0.0
+        },
+        {
+          "threshold": 0.8,
+          "coverage": 1.0,
+          "risk": 0.0
+        },
+        {
+          "threshold": 0.85,
+          "coverage": 1.0,
+          "risk": 0.0
+        },
+        {
+          "threshold": 0.9,
+          "coverage": 1.0,
+          "risk": 0.0
+        },
+        {
+          "threshold": 0.95,
+          "coverage": 1.0,
+          "risk": 0.0
+        }
+      ],
+      "calibration": {
+        "brier": 0.0,
+        "ece": 0.0,
+        "bins": [
+          {
+            "bin": 0,
+            "count": 15,
+            "mean_score": 0.0,
+            "fraction_positive": 0.0
+          },
+          {
+            "bin": 1,
+            "count": 0
+          },
+          {
+            "bin": 2,
+            "count": 0
+          },
+          {
+            "bin": 3,
+            "count": 0
+          },
+          {
+            "bin": 4,
+            "count": 0
+          },
+          {
+            "bin": 5,
+            "count": 0
+          },
+          {
+            "bin": 6,
+            "count": 0
+          },
+          {
+            "bin": 7,
+            "count": 0
+          },
+          {
+            "bin": 8,
+            "count": 0
+          },
+          {
+            "bin": 9,
+            "count": 93,
+            "mean_score": 1.0,
+            "fraction_positive": 1.0
+          }
+        ]
+      },
+      "incipient_stress": {
+        "count": 15,
+        "abstained": 0
+      }
+    },
+    "linear_json": {
+      "model": "linear_json",
+      "sample_count": 108,
+      "coverage": 1.0,
+      "risk": 0.0,
+      "balanced_accuracy": 1.0,
+      "macro_f1": 1.0,
+      "precision_fault": 1.0,
+      "recall_fault": 1.0,
+      "false_alert_rate": 0.0,
+      "accepted_count": 108,
+      "abstained_count": 0,
+      "confusion_matrix": {
+        "labels": [
+          "NORMAL",
+          "FAULT"
+        ],
+        "matrix": [
+          [
+            15,
+            0
+          ],
+          [
+            0,
+            93
+          ]
+        ],
+        "abstained": 0
+      },
+      "risk_coverage": [
+        {
+          "threshold": 0.5,
+          "coverage": 1.0,
+          "risk": 0.0
+        },
+        {
+          "threshold": 0.55,
+          "coverage": 1.0,
+          "risk": 0.0
+        },
+        {
+          "threshold": 0.6,
+          "coverage": 1.0,
+          "risk": 0.0
+        },
+        {
+          "threshold": 0.65,
+          "coverage": 1.0,
+          "risk": 0.0
+        },
+        {
+          "threshold": 0.7,
+          "coverage": 1.0,
+          "risk": 0.0
+        },
+        {
+          "threshold": 0.75,
+          "coverage": 1.0,
+          "risk": 0.0
+        },
+        {
+          "threshold": 0.8,
+          "coverage": 0.9722222222222222,
+          "risk": 0.0
+        },
+        {
+          "threshold": 0.85,
+          "coverage": 0.9722222222222222,
+          "risk": 0.0
+        },
+        {
+          "threshold": 0.9,
+          "coverage": 0.9722222222222222,
+          "risk": 0.0
+        },
+        {
+          "threshold": 0.95,
+          "coverage": 0.9722222222222222,
+          "risk": 0.0
+        }
+      ],
+      "calibration": {
+        "brier": 0.0014271001904225668,
+        "ece": 0.01056074655217012,
+        "bins": [
+          {
+            "bin": 0,
+            "count": 15,
+            "mean_score": 0.0099,
+            "fraction_positive": 0.0
+          },
+          {
+            "bin": 1,
+            "count": 0
+          },
+          {
+            "bin": 2,
+            "count": 0
+          },
+          {
+            "bin": 3,
+            "count": 0
+          },
+          {
+            "bin": 4,
+            "count": 0
+          },
+          {
+            "bin": 5,
+            "count": 0
+          },
+          {
+            "bin": 6,
+            "count": 0
+          },
+          {
+            "bin": 7,
+            "count": 3,
+            "mean_score": 0.7768,
+            "fraction_positive": 1.0
+          },
+          {
+            "bin": 8,
+            "count": 0
+          },
+          {
+            "bin": 9,
+            "count": 90,
+            "mean_score": 0.9964,
+            "fraction_positive": 1.0
+          }
+        ]
+      },
+      "incipient_stress": {
+        "count": 15,
+        "abstained": 0
+      }
+    }
+  },
+  "warning": "These metrics are generated from synthetic signals. They do not establish real-world pump-fault detection performance and must not be reported as such.",
+  "generated_at": "2026-11-16T17:20:51.391105+00:00",
+  "dataset": {
+    "dataset_version": "synthetic-grouped-v2",
+    "feature_contract": {
+      "version": "petrosense-time-v1",
+      "features": [
+        "rms",
+        "peak_abs",
+        "std",
+        "skewness",
+        "kurtosis_excess",
+        "crest_factor",
+        "zero_crossing_rate",
+        "spectral_1x_ratio",
+        "spectral_2x_ratio",
+        "high_frequency_ratio"
+      ]
+    },
+    "seeds": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20
+    ],
+    "scenarios": [
+      "normal",
+      "imbalance",
+      "cavitation",
+      "incipient_fault",
+      "custom_abnormal",
+      "incipient_boundary"
+    ],
+    "windows_per_run": 3,
+    "rated_speeds": [
+      2800,
+      2900,
+      3000
+    ],
+    "sample_count": 360,
+    "run_count": 120,
+    "generated_at": "2026-11-16T17:20:48.400900+00:00",
+    "provenance": "SIMULATED",
+    "limitations": "Synthetic signals only. This dataset cannot establish real-world pump fault-detection performance."
+  },
+  "split": {
+    "description": "GroupShuffleSplit by run_id (scenario + seed); windows from one simulated run never appear in both train and test.",
+    "train_runs": 84,
+    "test_runs": 36,
+    "train_samples": 252,
+    "test_samples": 108
+  },
+  "feature_contract": {
+    "version": "petrosense-time-v1",
+    "features": [
+      "rms",
+      "peak_abs",
+      "std",
+      "skewness",
+      "kurtosis_excess",
+      "crest_factor",
+      "zero_crossing_rate",
+      "spectral_1x_ratio",
+      "spectral_2x_ratio",
+      "high_frequency_ratio"
+    ]
+  },
+  "selected_edge_model": "petrosense-linear 0.1.0"
+}

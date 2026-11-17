@@ -1,0 +1,72 @@
+name: pumpverity-ai
+
+services:
+  api:
+    build:
+      context: ./apps/api
+    environment:
+      PETROSENSE_ENVIRONMENT: ${PETROSENSE_ENVIRONMENT:-development}
+      PETROSENSE_SECRET_KEY: ${PETROSENSE_SECRET_KEY:?Set PETROSENSE_SECRET_KEY in .env}
+      PETROSENSE_DEMO_PASSWORD: ${PETROSENSE_DEMO_PASSWORD:?Set PETROSENSE_DEMO_PASSWORD in .env}
+      PETROSENSE_DATABASE_URL: sqlite:////app/data/petrosense.db
+      PETROSENSE_CORS_ORIGINS: http://localhost:5173,http://127.0.0.1:5173
+      PETROSENSE_COOKIE_SECURE: "false"
+      PETROSENSE_MCP_TRANSPORT: http
+      PETROSENSE_MCP_SERVER_URL: http://mcp:8010/mcp
+      PETROSENSE_COPILOT_PROVIDER: ${PETROSENSE_COPILOT_PROVIDER:-deterministic}
+    command:
+      - sh
+      - -c
+      - alembic upgrade head && python -m app.db.seed && uvicorn app.main:app --host 0.0.0.0 --port 8000
+    ports:
+      - "8000:8000"
+    volumes:
+      - pumpverity-data:/app/data
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/v1/health', timeout=3)
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 20s
+    restart: unless-stopped
+
+  mcp:
+    build:
+      context: ./apps/api
+    environment:
+      PETROSENSE_ENVIRONMENT: ${PETROSENSE_ENVIRONMENT:-development}
+      PETROSENSE_SECRET_KEY: ${PETROSENSE_SECRET_KEY:?Set PETROSENSE_SECRET_KEY in .env}
+      PETROSENSE_DATABASE_URL: sqlite:////app/data/petrosense.db
+      PETROSENSE_MCP_HOST: 0.0.0.0
+      PETROSENSE_MCP_PORT: "8010"
+    command: ["python", "-m", "app.copilot.server"]
+    depends_on:
+      api:
+        condition: service_healthy
+    volumes:
+      - pumpverity-data:/app/data
+    expose:
+      - "8010"
+    restart: unless-stopped
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    environment:
+      VITE_API_PROXY_TARGET: http://api:8000
+    ports:
+      - "5173:5173"
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  pumpverity-data:
+
+
