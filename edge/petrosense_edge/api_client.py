@@ -1,3 +1,4 @@
+import http.client
 import json
 from typing import Any
 from urllib import error, parse, request
@@ -57,6 +58,11 @@ class ApiClient:
         except error.URLError as exc:
             raise EdgeApiError(
                 f"Monitoring API is unreachable at {self.base_url}: {exc.reason}"
+            ) from exc
+        except (OSError, http.client.HTTPException) as exc:
+            # Connection reset/aborted mid-response, timeouts and malformed status lines.
+            raise EdgeApiError(
+                f"Connection to the monitoring API at {self.base_url} failed: {exc}"
             ) from exc
 
     def login(self, identifier: str, password: str) -> dict[str, Any]:
