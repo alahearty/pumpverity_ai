@@ -1,6 +1,6 @@
 # PUMPVERITY AI
 
-**Uncertainty-aware, offline-first condition monitoring for centrifugal pumps — academic research prototype.**
+**Uncertainty-aware, edge-first condition monitoring for centrifugal pumps — academic research prototype.**
 
 PUMPVERITY AI is a six-month research prototype for low-cost, vibration-based condition monitoring
 of a laboratory centrifugal-pump test rig. It is being developed as an NCDMB-oriented indigenous
@@ -15,30 +15,67 @@ technology research project.
 
 ## Presentation mode (NCDMB demo)
 
-One command starts the API, web app and a paced simulated edge stream, then opens the browser:
+A live demonstration of the edge decision pipeline on a simulated test rig: switch scenarios and
+watch the system decide **normal**, **suspected fault**, **uncertain (abstain)** or
+**sensor-invalid** in real time. Everything runs offline on one Windows laptop.
+
+### First time on a machine (once)
+
+Install Python 3.13 and Node.js 22+, then from the repository root:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File scripts/demo.ps1 -Reset   # fresh data + 1-minute warm-up history
-powershell -File scripts/demo-stop.ps1                             # stop everything
+powershell -ExecutionPolicy Bypass -File scripts/setup.ps1
 ```
 
-Sign in at `http://localhost:5173` as **`admin`** with password **`PumpVerity@2026`** (all test
-accounts are listed under [Demo sign-in](#demo-sign-in)). The dark presenter bar at the bottom of
-every page switches the simulated rig between scenarios - keys `1`-`5`, `P` to pause - and the
-dashboard shows the edge decision live: normal, suspected fault, uncertain (abstain) or
-sensor-invalid. The full click-by-click script, talking points and recovery steps are in
-[`docs/DEMO-RUNBOOK.md`](docs/DEMO-RUNBOOK.md).
+This creates `apps/api/.env` with presentation mode enabled and the shared demo password,
+installs all dependencies and seeds the test accounts.
 
-What presentation mode adds (enabled by `PETROSENSE_DEMO_MODE=true`):
+### Every presentation
 
-- `edge/petrosense_edge/demo.py` - streams one SIMULATED window per second through the real edge
-  pipeline (validation → features → hash-verified inference → decision policy → API); it
-  reconnects automatically and never back-dates timestamps.
-- `/api/v1/demo/control` - presenter scenario selection (engineer/admin only, audited).
-- `PETROSENSE_ALERT_DEDUP_PER_SESSION=true` - one open alert per category per session instead of
-  one per window (prevents alert storms in continuous streams).
-- An operations-console dashboard: live condition header, fault-score timeline against the
-  abstention band, event feed and pipeline view.
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/demo.ps1 -Reset   # start: fresh data + 1-minute warm-up history
+powershell -File scripts/demo-stop.ps1                             # stop everything afterwards
+```
+
+The launcher trains and activates the edge model if needed, opens three windows titled
+*"… – keep this window open"* (API, web app, edge stream) and opens the browser. **Minimise those
+windows; never close them** - each restarts its service automatically if it stops. Omit `-Reset`
+to keep the existing history.
+
+### Sign in and drive the demo
+
+Open `http://localhost:5173` and sign in as **`admin`** / **`PumpVerity@2026`** (all test accounts:
+[Demo sign-in](#demo-sign-in)). The dark presenter bar at the bottom of every page controls the
+simulated rig; keyboard shortcuts work anywhere outside a text box:
+
+| Key | Scenario | What the dashboard shows |
+|---|---|---|
+| `1` | Healthy operation | Green - *Operating normally* |
+| `2` | Rotor imbalance | Red - *Fault suspected*, reviewable alert raised |
+| `3` | Cavitation | Red - *Fault suspected*, reviewable alert raised |
+| `4` | Weak anomaly | Amber - *Uncertain*, the model abstains and routes to review |
+| `5` | Sensor disconnect | Violet - *Sensor invalid*, the model is never run |
+| `P` | Pause / resume | Stream stops; the header shows IDLE |
+
+The click-by-click script mapped to the NCDMB slides, honest answers to likely questions and
+recovery steps are in [`docs/DEMO-RUNBOOK.md`](docs/DEMO-RUNBOOK.md).
+
+### What presentation mode adds
+
+Enabled by `PETROSENSE_DEMO_MODE=true` (set by `setup.ps1`; off by default in code):
+
+- `edge/petrosense_edge/demo.py` streams one SIMULATED window per second through the real edge
+  pipeline (validation → features → hash-verified inference → decision policy → API). It
+  reconnects automatically, never back-dates timestamps and closes interrupted sessions as
+  ABORTED.
+- `/api/v1/demo/control` stores the presenter's scenario choice (engineer/admin only, audited).
+- `PETROSENSE_ALERT_DEDUP_PER_SESSION=true` keeps one open alert per category per session instead
+  of one per window, so a continuous fault does not flood the alert queue.
+- The dashboard is an operations console: live condition header, fault-score timeline against
+  the 0.35/0.65 abstention band, "what just happened" event feed and pipeline view.
+
+All presentation data is simulated and labelled `SIMULATED`; synthetic model scores are not
+real-pump accuracy.
 
 ---
 
@@ -63,8 +100,10 @@ Implemented and verified:
   explicit separate equipment/data/connectivity states.
 - Sensor Health diagnostics: last valid reading, latest quality, freshness, invalid windows,
   missing-index gaps, validation warnings and latest session context.
-- Dashboard driven by real monitoring counts and latest persisted window; condition is shown as
-  **Not inferred** until a validated model exists.
+- Operations-console dashboard: live condition header with plain-language reasoning, fault-score
+  timeline against the abstention band, event feed, pipeline view and monitoring counts; condition
+  is shown as **Not inferred** until a model decision exists, and sensor-invalid data is never
+  shown as healthy.
 - Historical RMS trends and window records with alert-backed event overlays aligned to persisted
   signal windows; date-range filters, model-version markers and exports remain later work.
 - Versioned time/spectral feature contract shared by the edge and research pipeline.
@@ -76,7 +115,8 @@ Implemented and verified:
   explanation, features and model identity.
 - Functional Model Management screen with synthetic-evaluation warnings and activation controls.
 - Automatic reviewable alerts for `FAULT`, `UNCERTAIN` and `SENSOR_INVALID` predictions, with one
-  alert per prediction and configurable auto-creation settings.
+  alert per prediction (or, with `PETROSENSE_ALERT_DEDUP_PER_SESSION=true`, one open alert per
+  category per acquisition session) and configurable auto-creation settings.
 - Functional Alerts & Review screen with filters, immutable prediction evidence, acknowledgement,
   append-only engineering reviews, label confirmation/correction and review history.
 - Alert and review audit entries; engineer-reviewed labels use `label_source = ENGINEER_REVIEW` and
@@ -99,8 +139,9 @@ Implemented and verified:
 - Structured audit logging, request IDs, consistent API errors and JSON logs.
 - Docker Compose configuration (validated with `docker compose config`) and a GitHub Actions CI
   definition. Container images were not built locally because the Docker daemon was unavailable.
-- 74 backend tests, 38 edge tests, 3 ML pipeline tests, 41 frontend tests and 7 Playwright
-  end-to-end tests passing locally. Playwright includes pump registration, the twelve-screen map,
+- 83 backend tests, 38 edge tests, 3 ML pipeline tests, 44 frontend tests and 7 Playwright
+  end-to-end tests (5 read-only plus 2 write tests gated by `PETROSENSE_E2E_ALLOW_WRITES`) passing
+  locally. Playwright includes pump registration, the twelve-screen map,
   SSE live inference, AI Analysis, alert review, Copilot tool execution/report approval and history
   overlays.
 
@@ -207,9 +248,10 @@ infrastructure/            local Docker notes
 powershell -ExecutionPolicy Bypass -File scripts/setup.ps1
 ```
 
-The script creates `apps/api/.env` with a random JWT secret and demo password if needed, creates
-the virtual environment, installs dependencies, applies the migration, seeds reference data and
-four local demo accounts, and runs `npm install`.
+The script creates `apps/api/.env` if needed (random JWT secret, the shared demo password from
+[Demo sign-in](#demo-sign-in), presentation mode and the in-process MCP transport), creates the
+virtual environment, installs dependencies, applies the migration, seeds reference data and four
+local demo accounts, and runs `npm install`.
 
 ### Manual setup
 
@@ -246,7 +288,8 @@ Terminal 2 (repository root):
 npm run dev:web
 ```
 
-Terminal 3 (MCP server used by the Copilot when `PETROSENSE_MCP_TRANSPORT=http`):
+Terminal 3 - only when `PETROSENSE_MCP_TRANSPORT=http` (the default `.env` from `setup.ps1` uses
+the in-process `memory` transport, so the Copilot works without this):
 
 ```powershell
 Set-Location apps/api
@@ -482,7 +525,11 @@ See [`docs/security/access-control.md`](docs/security/access-control.md).
 - The Copilot cannot perform arbitrary queries, shell/Python execution, industrial actuation or
   verified-ground-truth promotion.
 - The ML pipeline is not part of the API Docker image and must be installed separately for research.
-- The simulator CLI is not containerised and scenario injection is CLI-driven.
+- The simulator CLI and demo driver are not containerised. Scenario injection is CLI-driven, or
+  UI-driven through the presenter bar in presentation mode.
+- Presentation-mode scenario state is held in API memory and returns to *Healthy* when the API
+  restarts. The shared demo password is for local, offline demonstrations only; set a private
+  `PETROSENSE_DEMO_PASSWORD` before any hosted or shared deployment.
 - Preprocessing is currently validation, bounded windowing and feature centering/shape statistics;
   configurable band-pass/anti-alias filtering is not implemented.
 - Playwright live/SSE, AI Analysis and alert/review tests require writes and an active model; CI
