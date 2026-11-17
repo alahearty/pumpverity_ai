@@ -34,7 +34,9 @@ Local demo accounts, created by `scripts/setup.ps1` / `scripts/demo.ps1`. Sign i
 
    `-Reset` gives a clean database and streams a ~1-minute scripted history (healthy, uncertain,
    two faults, a sensor disconnect) so every screen has content with today's timestamps. Three
-   windows open (API, Web, Edge) - **leave them open, minimise them**.
+   windows open, titled *"... - keep this window open"* (API, Web, Edge stream). **Minimise them;
+   never close them.** Closing the API window is what causes a 502 / "API is not running" error
+   at sign-in. Each window restarts its service by itself if it ever stops.
 4. In the browser, sign in as `admin`, open **Dashboard**, press **1** (Healthy). Collapse the
    Copilot panel. You are ready.
 5. Keep `Downloads\PumpVerity_demo_screenshots` open in a background window as a fallback.
@@ -95,6 +97,7 @@ plan. The deterministic local planner understands monitoring questions, not open
 
 | Symptom | Fix |
 |---|---|
+| Sign-in shows **"The monitoring API is not running"** (or "status 502") | The API window was closed. Run `powershell -ExecutionPolicy Bypass -File scripts/demo.ps1` again (it stops nothing that is still running; if it reports a port in use, run `scripts/demo-stop.ps1` first). |
 | Presenter bar says **Edge stream offline** | The Edge window was closed. In the repo root: `apps/api/.venv/Scripts/python -m petrosense_edge.demo` |
 | Page looks frozen | Press `F5`; the session restores automatically. |
 | Signed out | Sign in again as `admin` / `PumpVerity@2026`. |

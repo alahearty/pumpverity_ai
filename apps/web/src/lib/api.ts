@@ -55,8 +55,13 @@ async function parseResponse<T>(response: Response): Promise<T> {
   if (!response.ok) {
     const body = payload as ApiErrorBody | null
     const error = body?.error
+    // 502/503/504 without an API error body come from the dev proxy: the API itself is down.
+    const apiUnreachable = !error && [502, 503, 504].includes(response.status)
     throw new ApiClientError(
-      error?.message ?? `Request failed with status ${response.status}.`,
+      error?.message ??
+        (apiUnreachable
+          ? 'The monitoring API is not running. Start it with scripts/demo.ps1 (or reopen the "PumpVerity API" window), then try again.'
+          : `Request failed with status ${response.status}.`),
       response.status,
       error?.code ?? 'HTTP_ERROR',
       error?.request_id ?? response.headers.get('X-Request-ID'),

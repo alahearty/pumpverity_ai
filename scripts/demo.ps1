@@ -95,7 +95,7 @@ try {
 Write-Host "Starting the monitoring API on :8000..." -ForegroundColor Cyan
 Start-Process powershell -ArgumentList @(
     "-NoExit", "-Command",
-    "`$host.UI.RawUI.WindowTitle = 'PumpVerity API'; Set-Location -LiteralPath '$root/apps/api'; .venv/Scripts/python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8000"
+    "`$host.UI.RawUI.WindowTitle = 'PumpVerity API - keep this window open'; Set-Location -LiteralPath '$root/apps/api'; while (`$true) { .venv/Scripts/python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8000; Write-Host 'API stopped - restarting in 3 seconds (close this window to stop it)' -ForegroundColor Yellow; Start-Sleep -Seconds 3 }"
 ) | Out-Null
 if (-not (Wait-Url "$apiBase/health" 60)) { throw "The API did not become healthy within 60 seconds." }
 Write-Host "  API healthy." -ForegroundColor Green
@@ -121,7 +121,7 @@ Write-Host "  Edge model active: $($active.name) v$($active.version)" -Foregroun
 Write-Host "Starting the web app on :5173..." -ForegroundColor Cyan
 Start-Process powershell -ArgumentList @(
     "-NoExit", "-Command",
-    "`$host.UI.RawUI.WindowTitle = 'PumpVerity Web'; Set-Location -LiteralPath '$root'; npm run dev:web"
+    "`$host.UI.RawUI.WindowTitle = 'PumpVerity Web - keep this window open'; Set-Location -LiteralPath '$root'; while (`$true) { npm run dev:web; Write-Host 'Web app stopped - restarting in 3 seconds (close this window to stop it)' -ForegroundColor Yellow; Start-Sleep -Seconds 3 }"
 ) | Out-Null
 
 $driverArgs = "-m petrosense_edge.demo"
@@ -129,7 +129,7 @@ if ($Warmup -or $Reset) { $driverArgs += " --warmup" }
 Write-Host "Starting the simulated edge stream..." -ForegroundColor Cyan
 Start-Process powershell -ArgumentList @(
     "-NoExit", "-Command",
-    "`$host.UI.RawUI.WindowTitle = 'PumpVerity Edge (simulated)'; Set-Location -LiteralPath '$root'; & '$python' $driverArgs"
+    "`$host.UI.RawUI.WindowTitle = 'PumpVerity Edge stream - keep this window open'; Set-Location -LiteralPath '$root'; & '$python' $driverArgs; while (`$true) { Write-Host 'Edge stream stopped - restarting in 3 seconds (close this window to stop it)' -ForegroundColor Yellow; Start-Sleep -Seconds 3; & '$python' -m petrosense_edge.demo }"
 ) | Out-Null
 
 if (-not (Wait-Url "http://localhost:5173" 60)) { Write-Warning "Web app is slow to start; refresh the browser in a moment." }

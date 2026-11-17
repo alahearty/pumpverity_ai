@@ -1,6 +1,14 @@
 # Stops the PumpVerity AI demo processes started by scripts/demo.ps1.
 $ErrorActionPreference = "Continue"
 
+# Close the launcher windows first: they restart their service if it exits.
+Get-CimInstance Win32_Process -Filter "Name = 'powershell.exe'" -ErrorAction SilentlyContinue |
+    Where-Object { $_.CommandLine -like "*PumpVerity*keep this window open*" } |
+    ForEach-Object {
+        Write-Host "Closing launcher window $($_.ProcessId)"
+        Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue
+    }
+
 foreach ($port in 8000, 5173) {
     $owners = Get-NetTCPConnection -LocalPort $port -State Listen -ErrorAction SilentlyContinue |
         Select-Object -ExpandProperty OwningProcess -Unique
