@@ -13,6 +13,35 @@ technology research project.
 
 ---
 
+## Presentation mode (NCDMB demo)
+
+One command starts the API, web app and a paced simulated edge stream, then opens the browser:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/demo.ps1 -Reset   # fresh data + 1-minute warm-up history
+powershell -File scripts/demo-stop.ps1                             # stop everything
+```
+
+Sign in at `http://localhost:5173` as **`admin`** with password **`PumpVerity@2026`** (all test
+accounts are listed under [Demo sign-in](#demo-sign-in)). The dark presenter bar at the bottom of
+every page switches the simulated rig between scenarios - keys `1`-`5`, `P` to pause - and the
+dashboard shows the edge decision live: normal, suspected fault, uncertain (abstain) or
+sensor-invalid. The full click-by-click script, talking points and recovery steps are in
+[`docs/DEMO-RUNBOOK.md`](docs/DEMO-RUNBOOK.md).
+
+What presentation mode adds (enabled by `PETROSENSE_DEMO_MODE=true`):
+
+- `edge/petrosense_edge/demo.py` - streams one SIMULATED window per second through the real edge
+  pipeline (validation → features → hash-verified inference → decision policy → API); it
+  reconnects automatically and never back-dates timestamps.
+- `/api/v1/demo/control` - presenter scenario selection (engineer/admin only, audited).
+- `PETROSENSE_ALERT_DEDUP_PER_SESSION=true` - one open alert per category per session instead of
+  one per window (prevents alert storms in continuous streams).
+- An operations-console dashboard: live condition header, fault-score timeline against the
+  abstention band, event feed and pipeline view.
+
+---
+
 ## Current status — 0.6 Engineering Copilot and MCP integration
 
 Implemented and verified:
@@ -229,17 +258,22 @@ Open `http://localhost:5173`. API docs: `http://localhost:8000/docs`. The MCP en
 `PETROSENSE_MCP_SERVICE_TOKEN` (or the API secret fallback). If this service is stopped, Copilot
 tools are unavailable but monitoring, edge inference and alert creation continue.
 
-Local demo accounts (seeded only when `PETROSENSE_DEMO_PASSWORD` is set):
+### Demo sign-in
 
-| Email | Username | Role |
-|---|---|---|
-| `admin@petrosense.local` | `admin` | Administrator |
-| `engineer@petrosense.local` | `engineer` | Engineer |
-| `researcher@petrosense.local` | `researcher` | Researcher |
-| `reviewer@petrosense.local` | `reviewer` | Reviewer |
+Local test accounts (seeded only when `PETROSENSE_DEMO_PASSWORD` is set). Sign in with the
+username or the email.
 
-The demo password is in the gitignored `apps/api/.env`. It is never committed or embedded in
-frontend code. Change it before any shared demonstration.
+| Username | Email | Role | Password |
+|---|---|---|---|
+| `admin` | `admin@petrosense.local` | Administrator | `PumpVerity@2026` |
+| `engineer` | `engineer@petrosense.local` | Engineer | `PumpVerity@2026` |
+| `researcher` | `researcher@petrosense.local` | Researcher | `PumpVerity@2026` |
+| `reviewer` | `reviewer@petrosense.local` | Reviewer | `PumpVerity@2026` |
+
+`scripts/setup.ps1` writes this shared password into the gitignored `apps/api/.env`, and
+`scripts/demo.ps1` re-applies whatever `.env` contains on each launch. It is a local, offline
+demonstration credential: set a private value before any hosted or shared deployment. It is never
+embedded in frontend code.
 
 ### Run a simulated acquisition
 
