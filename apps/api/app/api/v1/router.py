@@ -6,6 +6,7 @@ from app.api.v1 import (
     alerts,
     auth,
     copilot,
+    demo,
     models,
     monitoring,
     predictions,
@@ -32,5 +33,6 @@ api_router.include_router(alerts.router)
 api_router.include_router(alert_reviews.router)
 api_router.include_router(copilot.router)
 api_router.include_router(reports.router)
+api_router.include_router(demo.router)
 
 

@@ -69,6 +69,8 @@ def summarize(
             lines.append(
                 "I could not retrieve that alert. No conclusion is inferred from missing data."
             )
+    elif intent == "explain_uncertainty":
+        lines.extend(_uncertainty_lines(prediction, history))
     elif intent in {"pump_status", "overview"}:
         if status:
             lines.extend(_status_lines(status))
@@ -146,7 +148,9 @@ def _alert_lines(alert, prediction, sensors, model) -> list[str]:
         f"**{alert.get('severity')}** and status **{alert.get('status')}**. "
         f"Provenance: {_provenance(alert.get('provenance'))}."
     ]
-    evidence = prediction or alert.get("prediction") or {}
+    # The alert's own retained prediction is the evidence being explained. The pump's latest
+    # prediction may be newer (e.g. NORMAL again) and must not be presented as the alert's cause.
+    evidence = alert.get("prediction") or prediction or {}
     if evidence:
         lines.append(
             f"The retained prediction decision is **{evidence.get('decision')}** with data "
@@ -187,6 +191,45 @@ def _alert_lines(alert, prediction, sensors, model) -> list[str]:
             f"There are {len(alert['reviews'])} review entries. They are engineer judgements and "
             "are not verified experimental ground truth."
         )
+    return lines
+
+
+def _uncertainty_lines(prediction, history) -> list[str]:
+    lines = [
+        "PUMPVERITY abstains instead of guessing. When the fault-class score falls inside the "
+        "edge policy's uncertainty band (currently 0.35-0.65), the window is marked "
+        "**UNCERTAIN** and routed to engineering review rather than forced into NORMAL or FAULT."
+    ]
+    decision = prediction.get("decision") if prediction else None
+    if prediction:
+        if decision == "UNCERTAIN":
+            lines.append(
+                f"The latest decision **is UNCERTAIN**: score "
+                f"{_score(prediction.get('decision_score'))}, uncertainty "
+                f"{_score(prediction.get('uncertainty_score'))}."
+            )
+            if prediction.get("explanation"):
+                lines.append(f"Recorded explanation: {prediction.get('explanation')}")
+        else:
+            lines.append(
+                f"The latest decision is **{decision}**, not uncertain (score "
+                f"{_score(prediction.get('decision_score'))})."
+            )
+    if history:
+        uncertain = [
+            event for event in history.get("events", []) if event.get("category") == "UNCERTAIN"
+        ]
+        if uncertain and decision != "UNCERTAIN":
+            latest = uncertain[0]
+            lines.append(
+                f"The most recent uncertain event is alert {str(latest.get('alert_id'))[:8]} "
+                f"({latest.get('status')}). Open it in Alerts & Review to see its retained score "
+                "and evidence."
+            )
+        elif not uncertain and decision != "UNCERTAIN":
+            lines.append("No uncertain events are recorded for this pump.")
+    if not prediction and not history:
+        lines.append("Select a pump to see its latest decision and any uncertain events.")
     return lines
 
 

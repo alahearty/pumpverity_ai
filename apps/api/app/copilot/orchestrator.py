@@ -436,6 +436,7 @@ def _suggestions(intent: str) -> list[str]:
         "vibration": ["Show sensor health", "Open historical trends"],
         "fault_history": ["Explain the latest event", "Open Alerts & Review"],
         "model_evaluation": ["Is this metric synthetic?", "Explain uncertainty"],
+        "explain_uncertainty": ["Show sensor health", "Show fault history"],
         "generate_report": ["Show sensor health", "Explain data provenance"],
     }
     return mapping.get(intent, ["What is the current monitoring status?"])
