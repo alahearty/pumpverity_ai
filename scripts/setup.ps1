@@ -7,7 +7,9 @@ $generatedPassword = $null
 
 if (-not (Test-Path -LiteralPath "apps/api/.env")) {
     $secret = py -3.13 -c "import secrets; print(secrets.token_hex(32))"
-    $generatedPassword = py -3.13 -c "import secrets; print(secrets.token_urlsafe(12))"
+    # Shared local demo password (documented in README "Demo sign-in"). Local use only:
+    # set a private value in apps/api/.env before any hosted or shared deployment.
+    $generatedPassword = "PumpVerity@2026"
     $content = @"
 PETROSENSE_ENVIRONMENT=development
 PETROSENSE_SECRET_KEY=$secret
@@ -18,6 +20,9 @@ PETROSENSE_REFRESH_TOKEN_DAYS=7
 PETROSENSE_COOKIE_SECURE=false
 PETROSENSE_DEMO_PASSWORD=$generatedPassword
 PETROSENSE_LOG_LEVEL=INFO
+PETROSENSE_DEMO_MODE=true
+PETROSENSE_ALERT_DEDUP_PER_SESSION=true
+PETROSENSE_MCP_TRANSPORT=memory
 "@
     Set-Content -LiteralPath "apps/api/.env" -Value $content -Encoding ASCII
     Write-Host "Created apps/api/.env with a generated secret and demo password."

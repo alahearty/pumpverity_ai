@@ -128,6 +128,11 @@ class DeterministicProvider(CopilotProvider):
                 add("pumpverity_get_sensor_health", sensor_args)
             add("pumpverity_get_model_evaluation")
             intent = "explain_alert"
+        elif any(word in text for word in ("uncertain", "uncertainty", "abstain", "abstention")):
+            if pump_args:
+                add("pumpverity_get_latest_prediction", sensor_args)
+                add("pumpverity_get_fault_history", pump_args)
+            intent = "explain_uncertainty"
         elif any(word in text for word in ("sensor", "diagnostic", "disconnect", "invalid")):
             if pump_args:
                 add("pumpverity_get_sensor_health", sensor_args)
@@ -227,6 +232,7 @@ def _suggestions(intent: str) -> list[str]:
             "Explain uncertainty",
         ],
         "connectivity": ["Is there a physical edge channel?", "Show data provenance"],
+        "explain_uncertainty": ["Show sensor health", "Show fault history"],
     }
     return mapping.get(intent, ["What is the current monitoring status?"])
 

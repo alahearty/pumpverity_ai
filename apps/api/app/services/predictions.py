@@ -7,6 +7,7 @@ from sqlalchemy import func, select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session, joinedload
 
+from app.core.config import get_settings
 from app.core.errors import ApiError
 from app.db.models import (
     AcquisitionSession,
@@ -79,6 +80,19 @@ def _create_prediction_alert(
         return None
 
     category = AlertCategory(prediction.decision.value)
+    if get_settings().alert_dedup_per_session:
+        existing = db.execute(
+            select(Alert.id)
+            .join(Prediction, Alert.prediction_id == Prediction.id)
+            .where(
+                Prediction.session_id == session.id,
+                Alert.category == category,
+                Alert.status.in_((AlertStatus.OPEN, AlertStatus.ACKNOWLEDGED)),
+            )
+            .limit(1)
+        ).scalar_one_or_none()
+        if existing is not None:
+            return None
     if prediction.decision == PredictionDecision.FAULT:
         title = f"Fault decision on {pump.pump_code} / {sensor.sensor_code}"
     elif prediction.decision == PredictionDecision.UNCERTAIN:

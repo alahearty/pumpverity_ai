@@ -31,6 +31,11 @@ class Settings(BaseSettings):
     demo_seed_enabled: bool = True
     demo_password: SecretStr | None = None
     edge_sync_max_retries: int = Field(default=10, ge=1, le=100)
+    # Presentation mode: exposes /demo/control so a paced simulator can be steered from the UI.
+    demo_mode: bool = False
+    # Suppress repeat alerts while an open/acknowledged alert of the same category already
+    # exists for the same acquisition session (prevents alert storms in continuous streams).
+    alert_dedup_per_session: bool = False
     copilot_enabled: bool = True
     copilot_provider: Literal["deterministic", "openai_compatible"] = "deterministic"
     copilot_model: str = "gpt-4.1-mini"

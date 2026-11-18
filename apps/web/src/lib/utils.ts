@@ -14,9 +14,21 @@ export function initials(name: string): string {
     .join('')
 }
 
+const HAS_TIMEZONE = /(Z|[+-]\d{2}:?\d{2})$/i
+
+/**
+ * Parses an API timestamp. The API stores UTC, but some columns round-trip through SQLite
+ * without an offset; a bare ISO string would otherwise be read in the browser's local zone.
+ */
+export function parseApiDate(value: string): Date {
+  const trimmed = value.trim()
+  const isoDateTime = /^\d{4}-\d{2}-\d{2}T/.test(trimmed)
+  return new Date(isoDateTime && !HAS_TIMEZONE.test(trimmed) ? `${trimmed}Z` : trimmed)
+}
+
 export function formatDateTime(value: string | null | undefined): string {
   if (!value) return 'Not recorded'
-  const date = new Date(value)
+  const date = parseApiDate(value)
   if (Number.isNaN(date.getTime())) return 'Invalid timestamp'
   return `${new Intl.DateTimeFormat('en-GB', {
     day: '2-digit',

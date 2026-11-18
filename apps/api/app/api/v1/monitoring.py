@@ -20,7 +20,7 @@ from app.services import predictions as prediction_service
 
 router = APIRouter(prefix="/monitoring", tags=["Monitoring"])
 
-SSE_POLL_SECONDS = 2.0
+SSE_POLL_SECONDS = 1.0
 SSE_HEARTBEAT_SECONDS = 15.0
 
 
